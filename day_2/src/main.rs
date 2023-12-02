@@ -1,17 +1,38 @@
-use std::fs::File;
-use std::io::prelude::*;
-
 fn file_to_string(path: &str) -> String {
+  use std::fs::File;
+  use std::io::prelude::*;
   let mut file = File::open(path).unwrap();
   let mut contents = String::new();
   file.read_to_string(&mut contents).unwrap();
   contents
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+struct Cubes {
+  red: i32,
+  green: i32,
+  blue: i32,
+  game_id: i32,
+}
+
+impl Cubes {
+  fn new(game_id:i32) -> Self {
+    Cubes {
+      red: 0,
+      green: 0,
+      blue: 0,
+      game_id,
+    }
+  }
+
+  fn get_power(&self) -> i32 {
+    self.red * self.green * self.blue
+  }
+}
+
 fn main() {
   println!("Part 1: {}", part_1(file_to_string("inputs/input")));
   println!("Part 2: {}", part_2(file_to_string("inputs/input")));
-
 }
 
 fn part_1(input: String) -> i32 {
@@ -39,28 +60,7 @@ fn part_2(input: String) -> i32 {
   res
 }
 
-#[derive(Debug, Copy, Clone, PartialEq)]
-struct Cubes {
-  red: i32,
-  green: i32,
-  blue: i32,
-  game_id: i32,
-}
 
-impl Cubes {
-  fn new(game_id:i32) -> Self {
-    Cubes {
-      red: 0,
-      green: 0,
-      blue: 0,
-      game_id,
-    }
-  }
-
-  fn get_power(&self) -> i32 {
-    self.red * self.green * self.blue
-  }
-}
 
 fn parse_line(line: &str) -> Cubes {
   let mut parts = line.strip_prefix("Game ").unwrap().split(": ");
