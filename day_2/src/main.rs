@@ -15,6 +15,23 @@ struct Cubes {
   game_id: i32,
 }
 
+enum Colour {
+  Red,
+  Green,
+  Blue
+}
+
+impl Colour {
+  fn from_str(input: &str) -> Colour {
+    match input {
+      "red" => Colour::Red,
+      "green" => Colour::Green,
+      "blue" => Colour::Blue,
+      _ => unimplemented!()
+    }
+  }
+}
+
 impl Cubes {
   fn new(game_id:i32) -> Self {
     Cubes {
@@ -27,6 +44,14 @@ impl Cubes {
 
   fn get_power(&self) -> i32 {
     self.red * self.green * self.blue
+  }
+
+  fn update(&mut self, colour: Colour, num: i32) {
+    match colour {
+      Colour::Red => self.red = if self.red < num {num} else {self.red},
+      Colour::Green => self.green = if self.green < num {num} else {self.green},
+      Colour::Blue => self.blue = if self.blue < num {num} else {self.blue},
+    }
   }
 }
 
@@ -60,8 +85,6 @@ fn part_2(input: String) -> i32 {
   res
 }
 
-
-
 fn parse_line(line: &str) -> Cubes {
   let mut parts = line.strip_prefix("Game ").unwrap().split(": ");
   let value = parts.next().unwrap().parse::<i32>().unwrap();
@@ -71,28 +94,7 @@ fn parse_line(line: &str) -> Cubes {
     for cubes in round.split(", ") {
       let mut parts = cubes.split(' ');
       let num = parts.next().unwrap().parse::<i32>().unwrap();
-      if let Some(colour) = parts.next() {
-        match colour {
-          "red" => {
-            if max_cubes.red < num {
-              max_cubes.red = num;
-            }
-          },
-          "green"=> {
-            if max_cubes.green < num {
-              max_cubes.green = num;
-            }
-          },
-          "blue" => {
-            if max_cubes.blue < num {
-              max_cubes.blue = num;
-            }
-          },
-          _ => unreachable!()
-        }
-      } else {
-        unreachable!()
-      };
+      max_cubes.update(Colour::from_str(parts.next().unwrap()),num);
     }
   }
   max_cubes
