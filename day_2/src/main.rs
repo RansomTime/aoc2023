@@ -22,8 +22,8 @@ fn part_1(input: String) -> i32 {
     }
     let parse = parse_line(line);
     if parse.red <= 12 && parse.green <= 13 && parse.blue <= 14 {
-        res += parse.game_id;
-      }
+      res += parse.game_id;
+    }
   }
   res
 }
@@ -48,18 +48,18 @@ struct Cubes {
 }
 
 impl Cubes {
-    fn new(game_id:i32) -> Self {
-      Cubes {
-        red: 0,
-        green: 0,
-        blue: 0,
-        game_id,
-      }
+  fn new(game_id:i32) -> Self {
+    Cubes {
+      red: 0,
+      green: 0,
+      blue: 0,
+      game_id,
     }
+  }
 
-    fn get_power(&self) -> i32 {
-      self.red * self.green * self.blue
-    }
+  fn get_power(&self) -> i32 {
+    self.red * self.green * self.blue
+  }
 }
 
 fn parse_line(line: &str) -> Cubes {
@@ -95,9 +95,7 @@ fn parse_line(line: &str) -> Cubes {
       };
     }
   }
-  
-  
-max_cubes
+  max_cubes
 }
 
 #[cfg(test)]
@@ -118,12 +116,12 @@ mod tests {
   fn test_power() {
     assert_eq!(parse_line("Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green").get_power(), 48);
   }
-  
+
   #[test]
   fn test_parse_incorrect() {
     assert_eq!(parse_line("Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red").red,20);
   }
-  
+
   #[test]
   fn test_part_1() {
     assert_eq!(part_1(file_to_string("inputs/demo")), 8);
