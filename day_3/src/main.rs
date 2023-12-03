@@ -26,7 +26,11 @@ struct Num {
 }
 
 impl Num {
-  fn get_neighbours(&self, row_size: usize) -> Vec<usize>{
+  fn get_neighbours(&self, row_size: usize) -> Vec<usize> {
+    // returns vector of neighbours around &self
+    // this won't go out of index, but might overextend
+    // because we're going to filter in the next step we don't care
+
     let mut res: Vec<usize> = vec![];
     let left = match self.start.checked_sub(1) {
       Some(l) => {
@@ -37,13 +41,13 @@ impl Num {
     };
     let right = self.end + 1;
     res.push(right);
+
+    // if we can't go up from left then we're on the first line
     if let Some(in_range) = left.checked_sub(row_size) {
       res.append(&mut (in_range..=right-row_size).collect::<Vec<usize>>());
-    }; //go up if we're in range, if not then we're at the top of the string
+    };
 
     res.append(&mut(left+row_size..=right+row_size).collect::<Vec<usize>>());
-    // don't need to worry about oob here, as we're just comparing to the list
-    // of symbol positions
     res
 
   }
@@ -64,12 +68,11 @@ impl Symbol {
       '.' => Symbol::Dot,
       '0'..='9' => Symbol::Number,
       '\n' => Symbol::Newline,
-      '*' => Symbol::Gear,
+      '*' => Symbol::Gear, // part 2
       _ => Symbol::Symbol,
     }
   }
 }
-
 
 
 fn part_1(input: String) -> i32 {
@@ -82,36 +85,37 @@ fn part_1(input: String) -> i32 {
   for (pos, symbol) in input.chars().enumerate() {
     let symbol_type = Symbol::from_char(symbol);
     if symbol_type == Symbol::Symbol || symbol_type == Symbol::Gear {
-      symbols.push(pos)
+      symbols.push(pos);
     }
-    if let Some(start) = start_num {
-      if Symbol::from_char(symbol) != Symbol::Number {
-        nums.push(
-          Num {
-            start,
-            end: pos-1,
-            value: input[start..pos].parse::<i32>().unwrap(),
-          }
-        );
-        start_num = None;
-      }
-    } else if Symbol::from_char(symbol) == Symbol::Number {
-      start_num = Some(pos);
+
+    if let Some(start) = start_num { // we're half-way through parsing a number
+    if symbol_type != Symbol::Number {
+      nums.push(
+        Num {
+          start,
+          end: pos-1,
+          value: input[start..pos].parse::<i32>().unwrap(),
+        }
+      );
+      start_num = None;
     }
+  } else if symbol_type == Symbol::Number {
+    start_num = Some(pos);
   }
+}
 
-  let mut res = 0;
+let mut res = 0;
 
-  for num in nums {
-    let mut neighbours = num.get_neighbours(row_size);
-    neighbours.retain(|e| symbols.contains(e));
-    if !neighbours.is_empty() { // next to symbol
-      res += num.value;
-    }
+for num in nums {
+  let mut neighbours = num.get_neighbours(row_size);
+  neighbours.retain(|e| symbols.contains(e));
+  if !neighbours.is_empty() { // next to symbol
+    res += num.value;
   }
+}
 
 
-  res
+res
 }
 
 struct Gear {
@@ -120,16 +124,11 @@ struct Gear {
 }
 
 impl Gear {
-  fn is_valid_gear(&self) -> bool {
-    self.parts.len() == 2
-  }
-
   fn get_ratio(&self) -> i32 {
-    match self.is_valid_gear() {
-      false => 0,
-      true => {
-        self.parts.first().unwrap() * self.parts.last().unwrap()
-      }
+    if self.parts.len() == 2 {
+      self.parts.first().unwrap() * self.parts.last().unwrap()
+    } else {
+      0
     }
   }
 }
@@ -154,7 +153,7 @@ fn part_2(input: String) -> i32 {
       gear_pos.push(pos);
     }
     if let Some(start) = start_num {
-      if Symbol::from_char(symbol) != Symbol::Number {
+      if symbol_type != Symbol::Number {
         nums.push(
           Num {
             start,
@@ -164,7 +163,7 @@ fn part_2(input: String) -> i32 {
         );
         start_num = None;
       }
-    } else if Symbol::from_char(symbol) == Symbol::Number {
+    } else if symbol_type == Symbol::Number {
       start_num = Some(pos);
     }
   }
@@ -180,12 +179,10 @@ fn part_2(input: String) -> i32 {
         }
       }
     }
+
   }
-  let mut res = 0;
-  for gear in gears {
-    res += gear.get_ratio();
-  }
-  res
+
+  gears.into_iter().map(|e| e.get_ratio()).sum()
 }
 
 
