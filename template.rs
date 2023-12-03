@@ -1,0 +1,40 @@
+fn file_to_string(path: &str) -> String {
+  use std::fs::File;
+  use std::io::prelude::*;
+  let mut file = File::open(path).unwrap();
+  let mut contents = String::new();
+  file.read_to_string(&mut contents).unwrap();
+  contents
+}
+fn main() {
+  println!("Part 1: {}", part_1(file_to_string("inputs/input")));
+  println!("Part 2: {}", part_2(file_to_string("inputs/input")));
+}
+
+fn part_1(input: String) -> i32 {
+  unimplemented!()
+}
+
+fn part_2(input: String) -> i32 {
+  unimplemented!()
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  /*
+  #[test]
+  fn test_part_1() {
+    assert_eq!(part_1(file_to_string("inputs/demo")), 8);
+  }
+
+  #[test]
+  fn test_part_2() {
+    assert_eq!(part_2(file_to_string("inputs/demo")), 2286);
+  } */
+
+  #[test]
+  fn test_incorrect_answers() {
+  }
+}
