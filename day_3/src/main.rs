@@ -88,7 +88,8 @@ fn part_1(input: String) -> i32 {
       symbols.push(pos);
     }
 
-    if let Some(start) = start_num { // we're half-way through parsing a number
+    if let Some(start) = start_num {
+      // we're half-way through parsing a number
     if symbol_type != Symbol::Number {
       nums.push(
         Num {
@@ -179,7 +180,6 @@ fn part_2(input: String) -> i32 {
         }
       }
     }
-
   }
 
   gears.into_iter().map(|e| e.get_ratio()).sum()
