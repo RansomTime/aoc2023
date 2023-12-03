@@ -90,33 +90,33 @@ fn part_1(input: String) -> i32 {
 
     if let Some(start) = start_num {
       // we're half-way through parsing a number
-    if symbol_type != Symbol::Number {
-      nums.push(
-        Num {
-          start,
-          end: pos-1,
-          value: input[start..pos].parse::<i32>().unwrap(),
-        }
-      );
-      start_num = None;
+      if symbol_type != Symbol::Number {
+        nums.push(
+          Num {
+            start,
+            end: pos-1,
+            value: input[start..pos].parse::<i32>().unwrap(),
+          }
+        );
+        start_num = None;
+      }
+    } else if symbol_type == Symbol::Number {
+      start_num = Some(pos);
     }
-  } else if symbol_type == Symbol::Number {
-    start_num = Some(pos);
   }
-}
 
-let mut res = 0;
+  let mut res = 0;
 
-for num in nums {
-  let mut neighbours = num.get_neighbours(row_size);
-  neighbours.retain(|e| symbols.contains(e));
-  if !neighbours.is_empty() { // next to symbol
-    res += num.value;
+  for num in nums {
+    let mut neighbours = num.get_neighbours(row_size);
+    neighbours.retain(|e| symbols.contains(e));
+    if !neighbours.is_empty() { // next to symbol
+      res += num.value;
+    }
   }
-}
 
 
-res
+  res
 }
 
 struct Gear {
