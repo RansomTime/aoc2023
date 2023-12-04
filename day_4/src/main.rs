@@ -12,8 +12,7 @@ fn main() {
 }
 
 struct Card {
-  values: Vec<i32>,
-  winning: Vec<i32>,
+  wins: usize,
 }
 
 impl Card {
@@ -21,10 +20,11 @@ impl Card {
 
     let mut nums = input.split(": ").last().unwrap().split(" | ");
     let winning = Self::vectorise(nums.next().unwrap());
-    let values = Self::vectorise(nums.next().unwrap());
+    let mut values = Self::vectorise(nums.next().unwrap());
+    values.retain(|e| winning.contains(e));
+
     Card {
-      values,
-      winning,
+      wins: values.len(),
     }
   }
 
@@ -34,18 +34,15 @@ impl Card {
   }
 
   fn calculate_num_wins(&self) -> usize {
-    let mut res = self.values.clone();
-    res.retain(|e| self.winning.contains(e));
-    res.len()
+    self.wins
   }
 
   fn calculate_part_1_points(&self) -> i32 {
-    let wins = self.calculate_num_wins();
-    if wins == 0 {
+    if self.wins == 0 {
       0
     } else {
       let mut res = 1;
-      for _ in 1..wins {
+      for _ in 1..self.wins {
         res *= 2;
       }
       res
