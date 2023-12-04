@@ -11,46 +11,6 @@ fn main() {
   println!("Part 2: {}", part_2(file_to_string("inputs/input")));
 }
 
-struct Card {
-  wins: usize,
-}
-
-impl Card {
-  fn from(input: &str) -> Self {
-
-    let mut nums = input.split(": ").last().unwrap().split(" | ");
-    let winning = Self::vectorise(nums.next().unwrap());
-    let mut values = Self::vectorise(nums.next().unwrap());
-    values.retain(|e| winning.contains(e));
-
-    Card {
-      wins: values.len(),
-    }
-  }
-
-  fn vectorise(card: &str) -> Vec<i32> {
-    //println!("'{}'",card);
-    card.replace("  "," ").trim().split(' ').map(|e| e.parse::<i32>().unwrap()).collect()
-  }
-
-  fn calculate_num_wins(&self) -> usize {
-    self.wins
-  }
-
-  fn calculate_part_1_points(&self) -> i32 {
-    if self.wins == 0 {
-      0
-    } else {
-      let mut res = 1;
-      for _ in 1..self.wins {
-        res *= 2;
-      }
-      res
-    }
-  }
-
-}
-
 struct Cards {
   wins: usize,
   owned: usize
@@ -58,18 +18,40 @@ struct Cards {
 
 impl Cards {
   fn from(input: &str) -> Self {
+    let mut nums = input.split(": ").last().unwrap().split(" | ");
+    let winning = Self::vectorise(nums.next().unwrap());
+    let mut values = Self::vectorise(nums.next().unwrap());
+    values.retain(|e| winning.contains(e));
+
     Cards {
-      wins: Card::from(input).wins,
+      wins: values.len(),
       owned: 1,
     }
+  }
+
+  fn vectorise(card: &str) -> Vec<i32> {
+    //println!("'{}'",card);
+    card.replace("  "," ").trim().split(' ').map(|e| e.parse::<i32>().unwrap()).collect()
+  }
+}
+
+fn calculate_points(wins: usize) -> i32 {
+  if wins == 0 {
+    0
+  } else {
+    let mut res = 1;
+    for _ in 1..wins {
+      res *= 2;
+    }
+    res
   }
 }
 
 fn part_1(input: String) -> i32 {
   let mut res = 0;
   for line in input.lines() {
-    let card = Card::from(line);
-    res += card.calculate_part_1_points();
+    let wins = Cards::from(line).wins;
+    res += calculate_points(wins);
   }
   res
 }
@@ -102,12 +84,12 @@ mod tests {
 
   #[test]
   fn test_card_to_vec() {
-    assert_eq!(Card::vectorise("1 2 3"), vec![1,2,3]);
+    assert_eq!(Cards::vectorise("1 2 3"), vec![1,2,3]);
   }
 
   #[test]
   fn test_card_to_vec_more_than_one_space() {
-    assert_eq!(Card::vectorise("4  3  3"), vec![4,3,3]);
+    assert_eq!(Cards::vectorise("4  3  3"), vec![4,3,3]);
   }
 
   #[test]
