@@ -52,14 +52,14 @@ impl Card {
 }
 
 struct Cards {
-  card: Card,
+  wins: usize,
   owned: usize
 }
 
 impl Cards {
   fn from(input: &str) -> Self {
     Cards {
-      card: Card::from(input),
+      wins: Card::from(input).wins,
       owned: 1,
     }
   }
@@ -84,7 +84,7 @@ fn part_2(input: String) -> usize {
     let (wins,owned) = {
       // borrow checker buster
       let current_cards = cvec.get(i).unwrap();
-      (current_cards.card.calculate_num_wins(), current_cards.owned)
+      (current_cards.wins, current_cards.owned)
     };
     for j in i+1..=i+wins {
       if let Some(cards) = cvec.get_mut(j) {
