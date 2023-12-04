@@ -30,7 +30,6 @@ impl Cards {
   }
 
   fn vectorise(card: &str) -> Vec<i32> {
-    //println!("'{}'",card);
     card.replace("  "," ").trim().split(' ').map(|e| e.parse::<i32>().unwrap()).collect()
   }
 }
