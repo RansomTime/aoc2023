@@ -35,6 +35,15 @@ impl Map {
       None
     }
   }
+
+  fn navigate_backwards(&self, to: i64) -> Option<i64> {
+    let tgt = to - self.delta;
+    if tgt >= self.source && tgt < self.source + self.length {
+      Some(tgt)
+    } else {
+      None
+    }
+  }
 }
 
 
@@ -58,6 +67,21 @@ impl Maps {
       for map in mappings {
         if let Some(new_loc) = map.navigate(loc) {
           loc = new_loc;
+          break;
+        }
+      }
+    }
+    loc
+  }
+
+  fn nav_backwards(&mut self, mut loc: i64) -> i64 {
+    let mut rev = self.contents.clone();
+    rev.reverse();
+
+    for mappings in rev {
+      for map in mappings {
+        if let Some(prev) = map.navigate_backwards(loc) {
+          loc = prev;
           break;
         }
       }
@@ -134,20 +158,20 @@ fn part_2(input: String) -> i64 {
   }
 
   maps.push(curr_maps);
-  let mut res = i64::MAX;
-  for chunk in seed_ranges.chunks(2) {
-    let start = chunk[0];
-    let len = chunk[1];
-    for i in start..=start+len {
-      let next = maps.navigate(i);
-      if next < res {
-        res = next;
+
+  for i in 0..i64::MAX {
+    let test = maps.nav_backwards(i);
+    for chunk in seed_ranges.chunks(2) {
+      let start = chunk[0];
+      let len = chunk[1];
+
+      if test >= start && test < start + len {
+        return i;
       }
     }
   }
-  res
+  unreachable!() // tested all i64s, something went wrong
 }
-
 
 #[cfg(test)]
 mod tests {
