@@ -6,10 +6,23 @@ fn file_to_string(path: &str) -> String {
   file.read_to_string(&mut contents).unwrap();
   contents
 }
+
 fn main() {
-  println!("Part 1: {}", part_1(file_to_string("inputs/input")));
-  println!("Part 2: {}", part_2(file_to_string("inputs/input")));
+  use std::time::Instant;
+  {
+    let start = Instant::now();
+    println!("Part 1: {}", part_1(file_to_string("inputs/input")));
+    let duration = start.elapsed();
+    println!("Time for part 1: {:?}", duration);
+  }
+  {
+    let start = Instant::now();
+    println!("Part 2: {}", part_2(file_to_string("inputs/input")));
+    let duration = start.elapsed();
+    println!("Time for part 2: {:?}", duration);
+  }
 }
+
 
 fn part_1(input: String) -> i32 {
   unimplemented!()
