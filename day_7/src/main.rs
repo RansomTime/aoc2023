@@ -79,27 +79,20 @@ impl Hand {
 
 impl Ord for Hand {
   fn cmp(&self, other: &Self) -> Ordering {
-    if self == other {
+    if self.contents == other.contents {
       return Ordering::Equal
     }
     let self_hand = self.get_type();
     let other_hand = other.get_type();
-    if self_hand != other_hand {
-      if self_hand > other_hand {
-        Ordering::Greater
-      } else {
-        Ordering::Less
-      }
-    } else {
-      let mut schar = self.contents.chars();
-      let mut ochar = other.contents.chars();
-      let mut cnd = Ordering::Equal;
-      while cnd == Ordering::Equal {
-        cnd = get_card_value(schar.next().unwrap())
-        .cmp(&get_card_value(ochar.next().unwrap()))
-      }
-      cnd
+    let mut self_chars = self.contents.chars();
+    let mut other_chars = other.contents.chars();
+
+    let mut candidate = self_hand.cmp(&other_hand);
+    while candidate == Ordering::Equal {
+      candidate = get_card_value(self_chars.next().unwrap())
+      .cmp(&get_card_value(other_chars.next().unwrap()))
     }
+    candidate
   }
 }
 
