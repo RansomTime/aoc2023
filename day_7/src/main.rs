@@ -17,12 +17,6 @@ fn main() {
     let duration = start.elapsed();
     println!("Time for part 1: {:?}", duration);
   }
-  {
-    let start = Instant::now();
-    println!("Part 2: {}", part_2(file_to_string("inputs/input")));
-    let duration = start.elapsed();
-    println!("Time for part 2: {:?}", duration);
-  }
 }
 
 #[repr(u8)]
@@ -56,7 +50,7 @@ impl Hand {
       let elem = count.entry(e).or_insert(0);
       *elem += 1;
     }
-    let mut counts = count.into_values().collect::<Vec<(usize)>>();
+    let mut counts = count.into_values().collect::<Vec<usize>>();
 
     counts.sort();
     counts.reverse();
@@ -147,9 +141,6 @@ fn part_1(input: String) -> i32 {
   res
 }
 
-fn part_2(input: String) -> i32 {
-  unimplemented!()
-}
 
 
 #[cfg(test)]
