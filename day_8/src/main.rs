@@ -1,12 +1,8 @@
 use std::collections::HashMap;
 
 fn file_to_string(path: &str) -> String {
-  use std::fs::File;
-  use std::io::prelude::*;
-  let mut file = File::open(path).unwrap();
-  let mut contents = String::new();
-  file.read_to_string(&mut contents).unwrap();
-  contents
+  use std::fs;
+  fs::read_to_string(path).unwrap()
 }
 
 fn main() {
