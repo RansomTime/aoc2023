@@ -29,19 +29,15 @@ impl Sequence {
       original: input.split_whitespace().map(|e| e.parse::<i32>().unwrap()).collect(),
     }
   }  
-
-  fn get_derivitive(&self) -> Option<Sequence> {
+  
+  fn get_derivitive(&self) -> Sequence {
     let mut res = vec![];
-    if self.is_final() {
-      None
-    } else {
-      let mut i = 0;
-      while i + 1 < self.original.len() {
-        res.push(self.original[i+1] - self.original[i]);
-        i += 1;
-      }
-      Some(Sequence { original: res })
-    }    
+    let mut i = 0;
+    while i + 1 < self.original.len() {
+      res.push(self.original[i+1] - self.original[i]);
+      i += 1;
+    }
+    Sequence { original: res }
   }
   
   fn is_final(&self) -> bool {
@@ -52,7 +48,7 @@ impl Sequence {
     if self.is_final() {
       0
     } else {
-      self.original.last().unwrap() + self.get_derivitive().unwrap().get_next_value()
+      self.original.last().unwrap() + self.get_derivitive().get_next_value()
     }
   }
   
@@ -60,7 +56,7 @@ impl Sequence {
     if self.is_final() {
       0      
     } else {
-      self.original.first().unwrap() - self.get_derivitive().unwrap().get_prev_value()
+      self.original.first().unwrap() - self.get_derivitive().get_prev_value()
     }
   }
 }
@@ -68,56 +64,55 @@ impl Sequence {
 
 fn part_1(input: String) -> i32 {
   input.trim_end().lines().map(|line| {
-      Sequence::new(line).get_next_value()
+    Sequence::new(line).get_next_value()
   }).sum()
 }
 
 fn part_2(input: String) -> i32 {
   input.trim_end().lines().map(|line| {
     Sequence::new(line).get_prev_value()
-}).sum()
+  }).sum()
 }
-  
-  
-  #[cfg(test)]
-  mod tests {
-    use super::*;
-    #[test]
-    fn test_sequence_parse() {
-      assert_eq!(Sequence::new("0 3 6 9 12 15").original, vec![0,3,6,9,12,15]);
-    }
-    
-    #[test]
-    fn test_deriv() {
-      let seq = Sequence::new("0 3 6 9 12 15");
-      let deriv = seq.get_derivitive();
-      assert_eq!(deriv.unwrap().original, vec![3,3,3,3,3]);
-    }
-    
-    #[test]
-    fn test_next() {
-      let seq = Sequence::new("0 3 6 9 12 15");
-      assert_eq!(seq.get_next_value(), 18);
-    }
-    
-    #[test]
-    fn test_part_1() {
-      assert_eq!(part_1(file_to_string("inputs/demo")), 114);
-    }
-    
-    #[test]
-    fn test_prev() {
-      let seq = Sequence::new("0 3 6 9 12 15");
-      assert_eq!(seq.get_prev_value(), -3);
-    }
 
-    #[test]
-    fn test_part_2() {
-      assert_eq!(part_2(file_to_string("inputs/demo")), 2);
-    }
-    
-    #[test]
-    fn test_incorrect_answers() {
-    }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  #[test]
+  fn test_sequence_parse() {
+    assert_eq!(Sequence::new("0 3 6 9 12 15").original, vec![0,3,6,9,12,15]);
   }
   
+  #[test]
+  fn test_deriv() {
+    let seq = Sequence::new("0 3 6 9 12 15");
+    let deriv = seq.get_derivitive();
+    assert_eq!(deriv.original, vec![3,3,3,3,3]);
+  }
+  
+  #[test]
+  fn test_next() {
+    let seq = Sequence::new("0 3 6 9 12 15");
+    assert_eq!(seq.get_next_value(), 18);
+  }
+  
+  #[test]
+  fn test_part_1() {
+    assert_eq!(part_1(file_to_string("inputs/demo")), 114);
+  }
+  
+  #[test]
+  fn test_prev() {
+    let seq = Sequence::new("0 3 6 9 12 15");
+    assert_eq!(seq.get_prev_value(), -3);
+  }
+  
+  #[test]
+  fn test_part_2() {
+    assert_eq!(part_2(file_to_string("inputs/demo")), 2);
+  }
+  
+  #[test]
+  fn test_incorrect_answers() {
+  }
+}
