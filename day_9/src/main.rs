@@ -28,8 +28,8 @@ impl Sequence {
     Sequence {
       original: input.split_whitespace().map(|e| e.parse::<i32>().unwrap()).collect(),
     }
-  }
-  
+  }  
+
   fn get_derivitive(&self) -> Option<Sequence> {
     let mut res = vec![];
     if self.is_final() {
@@ -41,8 +41,7 @@ impl Sequence {
         i += 1;
       }
       Some(Sequence { original: res })
-    }
-    
+    }    
   }
   
   fn is_final(&self) -> bool {
@@ -67,27 +66,17 @@ impl Sequence {
 }
 
 
-
 fn part_1(input: String) -> i32 {
-  let mut res = 0;
-  for line in input.lines() {
-    if line.is_empty() {
-      continue;
-    }
-    res += Sequence::new(line).get_next_value();
-  }
-  res
+  input.trim_end().lines().map(|line| {
+      Sequence::new(line).get_next_value()
+  }).sum()
 }
 
 fn part_2(input: String) -> i32 {
-  let mut res = 0;
-  for line in input.lines() {
-    if line.is_empty() {
-      continue;
-    }
-    res += Sequence::new(line).get_prev_value();
-  }
-  res}
+  input.trim_end().lines().map(|line| {
+    Sequence::new(line).get_prev_value()
+}).sum()
+}
   
   
   #[cfg(test)]
@@ -121,7 +110,7 @@ fn part_2(input: String) -> i32 {
       let seq = Sequence::new("0 3 6 9 12 15");
       assert_eq!(seq.get_prev_value(), -3);
     }
-    
+
     #[test]
     fn test_part_2() {
       assert_eq!(part_2(file_to_string("inputs/demo")), 2);
