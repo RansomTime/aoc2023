@@ -1,5 +1,3 @@
-use std::vec;
-
 fn file_to_string(path: &str) -> String {
   use std::fs;
   fs::read_to_string(path).unwrap()
@@ -123,8 +121,6 @@ fn part_2(input: String) -> i32 {
       let seq = Sequence::new("0 3 6 9 12 15");
       assert_eq!(seq.get_prev_value(), -3);
     }
-    
-    
     
     #[test]
     fn test_part_2() {
